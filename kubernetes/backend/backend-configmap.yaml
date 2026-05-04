@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: muchtodo-ns
+data:
+  MONGO_URI: "mongodb://mongodb.muchtodo-ns.svc.cluster.local:27017"
+  SERVER_PORT: "8080"
+  LOG_LEVEL: "info"

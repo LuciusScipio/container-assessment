@@ -1,0 +1,48 @@
+services:
+  # MongoDB Database Service
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=muchtodo
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - muchtodo-network
+
+  # Backend API Service
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend-api
+    ports:
+      - "8080:8080"
+    # Ensures backend only starts when mongo is healthy[cite: 1]
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      # These override .env values to use container service names[cite: 3]
+      - MONGO_URI=mongodb://mongodb:27017
+      - DB_NAME=muchtodo
+      - SERVER_PORT=8080
+    restart: always
+    networks:
+      - muchtodo-network
+
+networks:
+  muchtodo-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
