@@ -1,14 +1,18 @@
 #!/bin/bash
 
+# Move to the root directory (container-assessment/)
+cd "$(dirname "$0")/.." || exit
+
 echo "Cleaning up Kubernetes resources..."
 
-# 1. Delete application resources from the namespace
+# Delete by directory using relative paths from root
 kubectl delete -f kubernetes/ingress.yaml --ignore-not-found
 kubectl delete -f kubernetes/backend/ --ignore-not-found
 kubectl delete -f kubernetes/mongodb/ --ignore-not-found
 kubectl delete -f kubernetes/namespace.yaml --ignore-not-found
 
-# 2. Delete the Kind cluster
+
+
 echo "Deleting the Kind cluster..."
 kind delete cluster --name muchtodo-cluster
 

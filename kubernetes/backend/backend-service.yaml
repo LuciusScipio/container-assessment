@@ -4,10 +4,11 @@ metadata:
   name: backend-service
   namespace: muchtodo-ns
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: backend-api
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 8080       # Internal port for the service
+      targetPort: 8080 # The port the container is listening on
+      nodePort: 30080  # The port you will use to access it from outside
